@@ -209,8 +209,8 @@ void transfer() {
       lcd.print(amounttransf) ;
       while (checkamount == 0) {
         
-    char keyconferma = keypad.getKey();
-      if (keyconferma == '#' ){
+    char keyconfirm = keypad.getKey();
+      if (keyconfirm == '#' ){
         lcd.clear();
         lcd.print("Annullato") ;
         delay(1500);
@@ -220,7 +220,7 @@ void transfer() {
         return;
       }
 
-      if (keyconferma == '*'){
+      if (keyconfirm == '*'){
         checkamount = 1; 
       }
       }
@@ -233,11 +233,11 @@ void transfer() {
 }
 
 void paytransfer() {
-  int debitoreok = 0;
+  int debtorok = 0;
   int debtorleft= 0;
   lcd.clear();
-  lcd.print("Debitore");
-  while (debitoreok == 0){
+  lcd.print("Debtor");
+  while (debtorok == 0){
     if (RC522.PICC_IsNewCardPresent())  {
       if (RC522.PICC_ReadCardSerial()) {
         delay(300);
@@ -258,17 +258,17 @@ void paytransfer() {
               totalmoney[i]=totalmoney[i] - amounttransf;
               if (totalmoney[i] < 1){
                 lcd.clear();
-                lcd.print("Bancarotta!"); 
+                lcd.print("Bankrupt!"); 
                 bankruptcysound();
                 amounttransf = debtorleft;
                 delay(1500);
-                debitoreok = 1;
+                debtorok = 1;
               } else {
                 lcd.clear();
-                lcd.print("Pagato!") ;
+                lcd.print("Paid!") ;
                 losemoney();
                 delay(1500);
-                debitoreok = 1;
+                debtorok = 1;
               }
             }
           }
@@ -382,14 +382,14 @@ void incassare() {
 }
 
 void pagare() {
-  int debitoreok = 0;
+  int debtorok = 0;
   int i = 0;
   char key = keypad.getKey();
   lcd.clear();
   lcd.print("Pagare "); 
   lcd.print(amount) ;
 
-  while (debitoreok == 0){  
+  while (debtorok == 0){  
     if (key == '*' ){
       lcd.clear();
       lcd.print("Annullato") ;
@@ -419,23 +419,23 @@ void pagare() {
               totalmoney[i]=totalmoney[i] - amount;
               if (totalmoney[i] < 1){
                 lcd.clear();
-                lcd.print("Bancarotta!"); 
+                lcd.print("Bankrupt!"); 
                 bankruptcysound();
                 delay(1500);
                 lcd.clear();
                 lcd.print("amount");  
                 lcd.setCursor(0, 1);
-                debitoreok = 1;
+                debtorok = 1;
                 clearData();
               } else {
                 lcd.clear();
-                lcd.print("Pagato!") ;
+                lcd.print("Paid!") ;
                 losemoney();
                 delay(1500);
                 lcd.clear();
                 lcd.print("amount");  
                 lcd.setCursor(0, 1);
-                debitoreok = 1;
+                debtorok = 1;
                 clearData();
               }
             }
@@ -444,7 +444,7 @@ void pagare() {
       }
     }
   }
-  debitoreok = 0;
+  debtorok = 0;
   amount = 0;
 }
 
@@ -456,7 +456,7 @@ void clearData(){
   return; 
 }
 
-void bilancio(){
+void balance(){
 
   for(int i=0; i<=numberplayers -1;i++){
     lcd.clear();
@@ -492,7 +492,7 @@ void loop() {
   if (key == '*' ){
     amount = atoi(soldibuild);
     if (amount == 0) {
-      bilancio();
+      balance();
     } else {
       incassare();
     }
