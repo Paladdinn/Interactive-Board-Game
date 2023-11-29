@@ -24,12 +24,12 @@ byte colPins[COLS] = {7,8,9}; //connect to the column pinouts of the keypad
  
 Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
  
-  int number_of_players;
+  int numberplayers;
   int amount;
-  int importotransf = 0;
-  int totaledenaro[7];
+  int amounttransf = 0;
+  int totalmoney[7];
   int k = 0;
-  String seriali[9];
+  String serial[9];
   char soldibuild[4];
 
   byte data_count = 0;
@@ -54,48 +54,48 @@ void setup() {
 
   // put your setup code here, to run once:
   lcd.begin(16, 2);
-  lcd.print(" Banca Monopoly ");     
+  lcd.print(" Monopoly Bank ");     
   delay(3000);
-  numerogiocatorifunz();
-  soldiinizialifunz();
+  numberplayersfunction();
+  initialmoneyfunction();
   assegnatag();
-  preparazione();  
+  preparation();  
 
 }
 
-void numerogiocatorifunz(){
+void numberplayersfunction(){
   
   lcd.clear();
-  lcd.print("Numero Giocatori");  
+  lcd.print("Number of Players");  
   lcd.setCursor(0, 1);
-  while (number_of_players == 0){
+  while (numberplayers == 0){
     char key = keypad.getKey();
     if (key != NO_KEY && key != '*' && key != '#'){
       if (key > '8') {
-      lcd.print("Max 8 giocatori"); 
+      lcd.print("Max 8 players"); 
       delay(1500);
       lcd.clear();
       lcd.print(key); 
       delay(1500);
       lcd.clear();
-      lcd.print("Numero Giocatori"); 
+      lcd.print("number player"); 
       lcd.setCursor(0, 1);
       } 
       else if (key < '2') {
-      lcd.print("Min 2 giocatori"); 
+      lcd.print("Min 2 player"); 
       delay(1500);
       lcd.clear();
       lcd.print(key); 
       delay(1500);
       lcd.clear();
-      lcd.print("Numero Giocatori"); 
+      lcd.print("number player"); 
       lcd.setCursor(0, 1);
       }
       else {
       lcd.print(key); 
-      number_of_players=key - 48;
+      numberplayers=key - 48;
       lcd.clear();
-      lcd.print(number_of_players);
+      lcd.print(numberplayers);
       delay(1500);
       return;
       }
@@ -103,15 +103,15 @@ void numerogiocatorifunz(){
   }
 }
 
-void soldiinizialifunz(){
+void initialmoneyfunction(){
   lcd.clear();
-  lcd.print("Soldi iniziali");   
+  lcd.print("Starting Money");   
   lcd.setCursor(0, 1);
   char soldibuild[3];
   char key;
   int j = 0;
   int i = 0;
-  while (i <= (number_of_players - 1)){
+  while (i <= (numberplayers - 1)){
     
     key = keypad.getKey();
     if (key != NO_KEY && key != '*' && key != '#'){
@@ -122,8 +122,8 @@ void soldiinizialifunz(){
 
     if(k == 4) {
 
-      for(i=0; i<=number_of_players - 1;i++){
-        totaledenaro[i]=atoi(soldibuild);
+      for(i=0; i<=numberplayers - 1;i++){
+        totalmoney[i]=atoi(soldibuild);
           
 
       }
@@ -142,8 +142,8 @@ void assegnatag() {
     int i = 0;
     int j = 0;
     int y = 0;
-  while (j <= (number_of_players - 1)){
-    for(i=0; i<=number_of_players - 1;i++){
+  while (j <= (numberplayers - 1)){
+    for(i=0; i<=numberplayers - 1;i++){
     lcd.print("Tag Giocatore "); 
     lcd.print(i + 1);
     while (y == i){ 
@@ -162,10 +162,10 @@ void assegnatag() {
         
             if (strID != "00:00:00:00") {
           
-              seriali[i] = strID;
+              serial[i] = strID;
               lcd.setCursor(0, 1);
-              lcd.print("  Acquisito  ");  
-              suonoregtag();
+              lcd.print("  Acquired  ");  
+              soundrecording();
               delay(1500);
               lcd.clear();
               y++;
@@ -178,36 +178,36 @@ void assegnatag() {
   }
 }
 
-void preparazione() {
+void preparation() {
   lcd.clear();
-  lcd.print("Importo");  
+  lcd.print("amount");  
   lcd.setCursor(0, 1);}
 
 
-void trasferimento() {
+void transfer() {
   lcd.clear();
-  lcd.print("Trasferimento");
+  lcd.print("transfer");
   lcd.setCursor(0, 1);
   int creditoreok = 0;
   int preptrasf = 0;
-  int checkimporto = 0;
+  int checkamount = 0;
   int t = 0;
-  importotransf = 0;
-  char solditransf[4];
+  amounttransf = 0;
+  char moneytransf[4];
   while (preptrasf == 0) {   
     char key = keypad.getKey();
     if (key != NO_KEY && key != '*' && key != '#'){
-      solditransf[t] = key;
+      moneytransf[t] = key;
       lcd.print(key);
       t++;
     }    
     if (key == '*' ){
       
-      importotransf = atoi(solditransf);
+      amounttransf = atoi(moneytransf);
       lcd.clear();
       lcd.print("Trasferire ") ;
-      lcd.print(importotransf) ;
-      while (checkimporto == 0) {
+      lcd.print(amounttransf) ;
+      while (checkamount == 0) {
         
     char keyconferma = keypad.getKey();
       if (keyconferma == '#' ){
@@ -215,26 +215,26 @@ void trasferimento() {
         lcd.print("Annullato") ;
         delay(1500);
         clearData();
-        checkimporto = 1;
-        preparazione();
+        checkamount = 1;
+        preparation();
         return;
       }
 
       if (keyconferma == '*'){
-        checkimporto = 1; 
+        checkamount = 1; 
       }
       }
-      pagatransf();
-      ricevitransf(); 
-      importotransf = 0;
+      paytransfer();
+      receivetransfer(); 
+      amounttransf = 0;
       return;
     }
   }
 }
 
-void pagatransf() {
+void paytransfer() {
   int debitoreok = 0;
-  int debitoreleft= 0;
+  int debtorleft= 0;
   lcd.clear();
   lcd.print("Debitore");
   while (debitoreok == 0){
@@ -248,25 +248,25 @@ void pagatransf() {
             String(RC522.uid.uidByte[i], HEX) +
             (i != 3 ? ":" : "");
         }
-        String seriale = strID;
+        String serial = strID;
 
-        if (seriale != "0"){
-          for(int i=0; i<=number_of_players -1;i++){
-            if (seriale == seriali[i]) {
+        if (serial != "0"){
+          for(int i=0; i<=numberplayers -1;i++){
+            if (serial == serial[i]) {
                       
-              debitoreleft = totaledenaro[i];
-              totaledenaro[i]=totaledenaro[i] - importotransf;
-              if (totaledenaro[i] < 1){
+              debtorleft = totalmoney[i];
+              totalmoney[i]=totalmoney[i] - amounttransf;
+              if (totalmoney[i] < 1){
                 lcd.clear();
                 lcd.print("Bancarotta!"); 
-                bancarottasound();
-                importotransf = debitoreleft;
+                bankruptcysound();
+                amounttransf = debtorleft;
                 delay(1500);
                 debitoreok = 1;
               } else {
                 lcd.clear();
                 lcd.print("Pagato!") ;
-                menosoldi();
+                losemoney();
                 delay(1500);
                 debitoreok = 1;
               }
@@ -279,7 +279,7 @@ void pagatransf() {
 }
 
 
-void ricevitransf() {
+void receivetransfer() {
   
   int creditoreok = 0;
   lcd.clear();
@@ -296,19 +296,19 @@ void ricevitransf() {
             String(RC522.uid.uidByte[i], HEX) +
             (i != 3 ? ":" : "");
         }
-        String seriale = strID;
+        String serial = strID;
         
-          if (seriale != "0"){
-          for(int i=0; i<=number_of_players -1;i++){
-            if (seriale == seriali[i]) {
+          if (serial != "0"){
+          for(int i=0; i<=numberplayers -1;i++){
+            if (serial == serial[i]) {
 
-                totaledenaro[i]=totaledenaro[i] + importotransf;
+                totalmoney[i]=totalmoney[i] + amounttransf;
                 lcd.clear();
                 lcd.print("Incassato!") ;
                 rumoresoldi();
                 delay(1500);
                 lcd.clear();
-                lcd.print("Importo");  
+                lcd.print("amount");  
                 lcd.setCursor(0, 1);
                 creditoreok = 1;
                clearData();
@@ -329,7 +329,7 @@ void incassare() {
        char key = keypad.getKey();
          lcd.clear();
       lcd.print("Incassare "); 
-      lcd.print(importo) ;
+      lcd.print(amount) ;
       
       while (creditoreok == 0) {
       if (key == '*' ){
@@ -337,7 +337,7 @@ void incassare() {
         lcd.print("Annullato") ;
         delay(1500);
         lcd.clear();
-        lcd.print("Importo");  
+        lcd.print("amount");  
         lcd.setCursor(0, 1);
         return;
       }
@@ -352,21 +352,21 @@ void incassare() {
             String(RC522.uid.uidByte[i], HEX) +
             (i != 3 ? ":" : "");
         }
-        String seriale = strID;
+        String serial = strID;
         
         lcd.print (strID); 
 
-        if (seriale != "0"){
-          for(i=0; i<=number_of_players -1;i++){
+        if (serial != "0"){
+          for(i=0; i<=numberplayers -1;i++){
             
-            if (seriale == seriali[i]) {
-              totaledenaro[i]=totaledenaro[i] + importo;
+            if (serial == serial[i]) {
+              totalmoney[i]=totalmoney[i] + amount;
               lcd.clear();
               lcd.print("Incassato!") ;
               rumoresoldi();
               delay(1500);
               lcd.clear();
-              lcd.print("Importo");  
+              lcd.print("amount");  
               lcd.setCursor(0, 1);
               creditoreok = 1;
               clearData();
@@ -378,7 +378,7 @@ void incassare() {
     }
   }
   creditoreok = 0;
-  importo = 0;
+  amount = 0;
 }
 
 void pagare() {
@@ -387,7 +387,7 @@ void pagare() {
   char key = keypad.getKey();
   lcd.clear();
   lcd.print("Pagare "); 
-  lcd.print(importo) ;
+  lcd.print(amount) ;
 
   while (debitoreok == 0){  
     if (key == '*' ){
@@ -395,7 +395,7 @@ void pagare() {
       lcd.print("Annullato") ;
       delay(1500);
       lcd.clear();        
-      lcd.print("Importo");  
+      lcd.print("amount");  
       lcd.setCursor(0, 1);
       return;
      }       
@@ -411,29 +411,29 @@ void pagare() {
             String(RC522.uid.uidByte[i], HEX) +
             (i != 3 ? ":" : "");
         }
-        String seriale = strID;
+        String serial = strID;
         
-        if (seriale != "0") {
-          for(int i=0; i<=number_of_players -1;i++){
-            if (seriale == seriali[i]) {
-              totaledenaro[i]=totaledenaro[i] - importo;
-              if (totaledenaro[i] < 1){
+        if (serial != "0") {
+          for(int i=0; i<=numberplayers -1;i++){
+            if (serial == serial[i]) {
+              totalmoney[i]=totalmoney[i] - amount;
+              if (totalmoney[i] < 1){
                 lcd.clear();
                 lcd.print("Bancarotta!"); 
-                bancarottasound();
+                bankruptcysound();
                 delay(1500);
                 lcd.clear();
-                lcd.print("Importo");  
+                lcd.print("amount");  
                 lcd.setCursor(0, 1);
                 debitoreok = 1;
                 clearData();
               } else {
                 lcd.clear();
                 lcd.print("Pagato!") ;
-                menosoldi();
+                losemoney();
                 delay(1500);
                 lcd.clear();
-                lcd.print("Importo");  
+                lcd.print("amount");  
                 lcd.setCursor(0, 1);
                 debitoreok = 1;
                 clearData();
@@ -445,7 +445,7 @@ void pagare() {
     }
   }
   debitoreok = 0;
-  importo = 0;
+  amount = 0;
 }
 
 void clearData(){
@@ -458,19 +458,19 @@ void clearData(){
 
 void bilancio(){
 
-  for(int i=0; i<=number_of_players -1;i++){
+  for(int i=0; i<=numberplayers -1;i++){
     lcd.clear();
-    lcd.print("Giocatore ");
+    lcd.print("Player ");
     lcd.print(i+1);
     lcd.setCursor(0, 1);
-    if (totaledenaro[i] > 0) {
-      lcd.print(totaledenaro[i]);
+    if (totalmoney[i] > 0) {
+      lcd.print(totalmoney[i]);
       delay(1500);
     } else {
-      lcd.print("Bancarotta!");
+      lcd.print("Bankrupt!");
       delay(1500);  
     }
-    preparazione();
+    preparation();
   }
 }
 
@@ -479,7 +479,7 @@ void loop() {
   // put your main code here, to run repeatedly:
 
   int h = 0;
-  importo = 0;
+  amount = 0;
   char key = keypad.getKey();
   if (key != NO_KEY && key != '*' && key != '#'){
     soldibuild[k] = key;
@@ -490,8 +490,8 @@ void loop() {
 /* DA QUI DA MODIFICARE */
 
   if (key == '*' ){
-    importo = atoi(soldibuild);
-    if (importo == 0) {
+    amount = atoi(soldibuild);
+    if (amount == 0) {
       bilancio();
     } else {
       incassare();
@@ -499,11 +499,11 @@ void loop() {
   }
 
   if (key == '#' ){
-    importo = atoi(soldibuild);
+    amount = atoi(soldibuild);
     lcd.setCursor(0, 1); 
     delay(1000);
-    if (importo == 0) {
-      trasferimento();
+    if (amount == 0) {
+      transfer();
     } else {
       pagare();
     }
@@ -511,8 +511,8 @@ void loop() {
 
 
   if (key == '0' ){
-    importo = atoi(soldibuild);
-    if (importo == 0) {
+    amount = atoi(soldibuild);
+    if (amount == 0) {
       lanciodadi();
       k = 0;     
     } 
@@ -528,20 +528,20 @@ void loop() {
         String(RC522.uid.uidByte[i], HEX) +
         (i != 3 ? ":" : "");
       }
-      String seriale = strID;  
-      if (seriale != "0"){
+      String serial = strID;  
+      if (serial != "0"){
 
-        for(h=0; h<=number_of_players -1;h++){
+        for(h=0; h<=numberplayers -1;h++){
             
-          if (seriale == seriali[h]) {
+          if (serial == serial[h]) {
             lcd.clear();
             lcd.print("Saldo Gioc. ") ;
             lcd.print(h + 1) ;
             lcd.setCursor(0, 1);
-            lcd.print(totaledenaro[h]) ;
+            lcd.print(totalmoney[h]) ;
             delay(1500);
             lcd.clear();
-            lcd.print("Importo");  
+            lcd.print("amount");  
             lcd.setCursor(0, 1);
           }
         }
@@ -558,7 +558,7 @@ void rumoresoldi(){
   noTone(buzzerpin);
 }
 
-void menosoldi(){
+void losemoney(){
   tone(buzzerpin,NOTE_G4);
   delay(250);
   tone(buzzerpin,NOTE_C4);
@@ -566,7 +566,7 @@ void menosoldi(){
   noTone(buzzerpin);
 }
 
-void bancarottasound(){
+void bankruptcysound(){
   tone(buzzerpin,NOTE_E4);
   delay(250);
   tone(buzzerpin,NOTE_D4);  
@@ -580,7 +580,7 @@ void bancarottasound(){
   noTone(buzzerpin);
 }
 
-void suonoregtag(){
+void soundrecording(){
   tone(buzzerpin,NOTE_A4);
   delay(250);
   tone(buzzerpin,NOTE_B4);  
@@ -619,6 +619,7 @@ void lanciodadi(){
   lcd.setCursor (12, 1);
   lcd.print (dado1 + dado2);
   delay(1500);
-  preparazione();
+  preparation();
 }
+
 
