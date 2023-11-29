@@ -1,4 +1,3 @@
-
 #include <LiquidCrystal.h>
 #include <Keypad.h>
 #include <EEPROM.h>     // We are going to read and write PICC's UIDs from/to EEPROM
@@ -35,8 +34,8 @@ Keypad keypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
   byte data_count = 0;
 
   /*#define pulsantemulti 8
-  #define pulsantemeno 9
-  #define pulsantepiu 10
+  #define minusbutton 9
+  #define plusbutton 10
   Vengono definiti PIN del RFID reader*/
   #define SDA_DIO 53  // 53 per Arduino Mega
   #define RESET_DIO 49
@@ -58,7 +57,7 @@ void setup() {
   delay(3000);
   numberplayersfunction();
   initialmoneyfunction();
-  assegnatag();
+  assigntag();
   preparation();  
 
 }
@@ -136,7 +135,7 @@ void initialmoneyfunction(){
   }
 }
 
-void assigntags() {
+void assigntag() {
   
     lcd.clear();
     int i = 0;
@@ -205,14 +204,14 @@ void transfer() {
       
       amounttransf = atoi(moneytransf);
       lcd.clear();
-      lcd.print("Trasferire ") ;
+      lcd.print("Transfer ") ;
       lcd.print(amounttransf) ;
       while (checkamount == 0) {
         
     char keyconfirm = keypad.getKey();
       if (keyconfirm == '#' ){
         lcd.clear();
-        lcd.print("Annullato") ;
+        lcd.print("Canceled") ;
         delay(1500);
         clearData();
         checkamount = 1;
@@ -266,7 +265,7 @@ void paytransfer() {
               } else {
                 lcd.clear();
                 lcd.print("Paid!") ;
-                losemoney();
+                losemoneysound();
                 delay(1500);
                 debtorok = 1;
               }
@@ -284,7 +283,7 @@ void receivetransfer() {
   int creditorok = 0;
   lcd.clear();
   lcd.print("Creditor");
-    while (creditoreok == 0) {
+    while (creditorok == 0) {
 
       if (RC522.PICC_IsNewCardPresent())  {
                     if (RC522.PICC_ReadCardSerial()) {
@@ -305,12 +304,12 @@ void receivetransfer() {
                 totalmoney[i]=totalmoney[i] + amounttransf;
                 lcd.clear();
                 lcd.print("Cashed in!") ;
-                rumoresoldi();
+                moneynoise();
                 delay(1500);
                 lcd.clear();
                 lcd.print("amount");  
                 lcd.setCursor(0, 1);
-                creditoreok = 1;
+                creditorok = 1;
                clearData();
               /* k = 0; */
               
@@ -363,7 +362,7 @@ void cashout() {
               totalmoney[i]=totalmoney[i] + amount;
               lcd.clear();
               lcd.print("Cashed in!") ;
-              rumoresoldi();
+              moneynoise();
               delay(1500);
               lcd.clear();
               lcd.print("amount");  
@@ -430,7 +429,7 @@ void pay() {
               } else {
                 lcd.clear();
                 lcd.print("Paid!") ;
-                losemoney();
+                losemoneysound();
                 delay(1500);
                 lcd.clear();
                 lcd.print("amount");  
@@ -535,7 +534,7 @@ void loop() {
             
           if (serial == serial[h]) {
             lcd.clear();
-            lcd.print("Saldo Gioc. ") ;
+            lcd.print("Balance Pay. ") ;
             lcd.print(h + 1) ;
             lcd.setCursor(0, 1);
             lcd.print(totalmoney[h]) ;
@@ -550,7 +549,7 @@ void loop() {
   }   
 }
 
-void rumoresoldi(){
+void moneynoise(){
   tone(buzzerpin,NOTE_B5,100);
   delay(100);
   tone(buzzerpin,NOTE_E6,850);
@@ -558,7 +557,7 @@ void rumoresoldi(){
   noTone(buzzerpin);
 }
 
-void losemoney(){
+void losemoneysound(){
   tone(buzzerpin,NOTE_G4);
   delay(250);
   tone(buzzerpin,NOTE_C4);
@@ -594,21 +593,21 @@ void soundrecording(){
   noTone(buzzerpin);
 }
 
-void lanciodadi(){
+void rolldice(){
   lcd.clear();
-  lcd.print("  Lancio  Dadi  ");
+  lcd.print("  Rolling Dice  ");
   int d = 0;
-  int dado1 = 0;
-  int dado2 = 0;
+  int dice1 = 0;
+  int dice2 = 0;
   while (d < 10) {
-    dado1 = (random(1,7));
-    dado2 = (random(1,7));
+    dice1 = (random(1,7));
+    dice2 = (random(1,7));
     lcd.setCursor (1, 1);
-    lcd.print (dado1);
+    lcd.print (dice1);
     lcd.setCursor (4, 1);
     lcd.print ("+");
     lcd.setCursor (6, 1);
-    lcd.print (dado2);
+    lcd.print (dice2);
     tone(buzzerpin,NOTE_A4,25);
     delay(100);
     noTone(buzzerpin);
@@ -617,9 +616,8 @@ void lanciodadi(){
   lcd.setCursor (9, 1);
   lcd.print ("=");
   lcd.setCursor (12, 1);
-  lcd.print (dado1 + dado2);
+  lcd.print (dice1 + dice2);
   delay(1500);
   preparation();
 }
-
 
