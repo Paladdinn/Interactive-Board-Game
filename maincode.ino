@@ -136,7 +136,7 @@ void initialmoneyfunction(){
   }
 }
 
-void assegnatag() {
+void assigntags() {
   
     lcd.clear();
     int i = 0;
@@ -144,7 +144,7 @@ void assegnatag() {
     int y = 0;
   while (j <= (numberplayers - 1)){
     for(i=0; i<=numberplayers - 1;i++){
-    lcd.print("Tag Giocatore "); 
+    lcd.print("Tag Player "); 
     lcd.print(i + 1);
     while (y == i){ 
 
@@ -188,7 +188,7 @@ void transfer() {
   lcd.clear();
   lcd.print("transfer");
   lcd.setCursor(0, 1);
-  int creditoreok = 0;
+  int creditorok = 0;
   int preptrasf = 0;
   int checkamount = 0;
   int t = 0;
@@ -281,9 +281,9 @@ void paytransfer() {
 
 void receivetransfer() {
   
-  int creditoreok = 0;
+  int creditorok = 0;
   lcd.clear();
-  lcd.print("Creditore");
+  lcd.print("Creditor");
     while (creditoreok == 0) {
 
       if (RC522.PICC_IsNewCardPresent())  {
@@ -304,7 +304,7 @@ void receivetransfer() {
 
                 totalmoney[i]=totalmoney[i] + amounttransf;
                 lcd.clear();
-                lcd.print("Incassato!") ;
+                lcd.print("Cashed in!") ;
                 rumoresoldi();
                 delay(1500);
                 lcd.clear();
@@ -322,19 +322,19 @@ void receivetransfer() {
       } 
 }
 
-void incassare() {
+void cashout() {
   
-   int creditoreok = 0;
+   int creditorok = 0;
    int i = 0;
        char key = keypad.getKey();
          lcd.clear();
-      lcd.print("Incassare "); 
+      lcd.print("Cash out "); 
       lcd.print(amount) ;
       
-      while (creditoreok == 0) {
+      while (creditorok == 0) {
       if (key == '*' ){
         lcd.clear();
-        lcd.print("Annullato") ;
+        lcd.print("Canceled") ;
         delay(1500);
         lcd.clear();
         lcd.print("amount");  
@@ -362,13 +362,13 @@ void incassare() {
             if (serial == serial[i]) {
               totalmoney[i]=totalmoney[i] + amount;
               lcd.clear();
-              lcd.print("Incassato!") ;
+              lcd.print("Cashed in!") ;
               rumoresoldi();
               delay(1500);
               lcd.clear();
               lcd.print("amount");  
               lcd.setCursor(0, 1);
-              creditoreok = 1;
+              creditorok = 1;
               clearData();
              
             }
@@ -377,22 +377,22 @@ void incassare() {
       }
     }
   }
-  creditoreok = 0;
+  creditorok = 0;
   amount = 0;
 }
 
-void pagare() {
+void pay() {
   int debtorok = 0;
   int i = 0;
   char key = keypad.getKey();
   lcd.clear();
-  lcd.print("Pagare "); 
+  lcd.print("Pay "); 
   lcd.print(amount) ;
 
   while (debtorok == 0){  
     if (key == '*' ){
       lcd.clear();
-      lcd.print("Annullato") ;
+      lcd.print("Canceled") ;
       delay(1500);
       lcd.clear();        
       lcd.print("amount");  
@@ -494,7 +494,7 @@ void loop() {
     if (amount == 0) {
       balance();
     } else {
-      incassare();
+      cashin();
     }
   }
 
@@ -505,7 +505,7 @@ void loop() {
     if (amount == 0) {
       transfer();
     } else {
-      pagare();
+      pay();
     }
   }
 
